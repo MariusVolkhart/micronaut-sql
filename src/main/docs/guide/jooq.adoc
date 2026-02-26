@@ -15,3 +15,20 @@ If Spring transaction management is in use, it will additionally create the foll
 * api:configuration.jooq.JooqExceptionTranslatorProvider[] for each `DataSource`
 * api:configuration.jooq.SpringTransactionProvider[] for each Spring `PlatformTransactionManager`
 
+== Programmatic transactions
+
+For most applications, the recommended way to use jOOQ is inside Micronaut-managed transactions (for example via `@Transactional`).
+
+If you need to execute jOOQ code in a programmatic transaction (for example from a place where you cannot use AOP), use api:configuration.jooq.JooqTransactionOperations[].
+It will execute the callback inside a Micronaut-managed JDBC transaction and provide a transaction-scoped link:{jooqapi}/org/jooq/DSLContext.html[DSLContext].
+
+[source,java]
+----
+// Injected bean (one per datasource)
+private final JooqTransactionOperations txOps;
+
+public int example() {
+    return txOps.execute(ctx -> ctx.selectOne().fetchSingle(0, Integer.class));
+}
+----
+

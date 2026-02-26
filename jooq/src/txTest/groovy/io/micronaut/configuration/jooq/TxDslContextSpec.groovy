@@ -128,6 +128,26 @@ class TxDslContextSpec extends Specification {
         applicationContext.close()
     }
 
+    void "test simple sql with programmatic tx ops"() {
+        given:
+        ApplicationContext applicationContext = new DefaultApplicationContext("test")
+        applicationContext.environment.addPropertySource(MapPropertySource.of(
+                'test',
+                ['datasources.default': [:]]
+        ))
+        applicationContext.start()
+
+        when:
+        JooqTransactionOperations txOps = applicationContext.getBean(JooqTransactionOperations)
+        int result = txOps.execute(tx -> tx.selectOne().fetchSingle(0, Integer))
+
+        then:
+        result == 1
+
+        cleanup:
+        applicationContext.close()
+    }
+
     void "test transaction sql"() {
         given:
         ApplicationContext applicationContext = new DefaultApplicationContext("test")
