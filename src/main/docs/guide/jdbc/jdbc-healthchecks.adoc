@@ -1,3 +1,14 @@
 Once you have configured a JDBC `DataSource` the https://docs.micronaut.io/latest/api/io/micronaut/management/health/indicator/jdbc/JdbcIndicator.html[JdbcIndicator] is activated resulting in the `/health` endpoint and https://docs.micronaut.io/latest/api/io/micronaut/health/CurrentHealthStatus.html[CurrentHealthStatus] interface resolving the health of the JDBC connection.
 
 See the section on the https://docs.micronaut.io/latest/guide/index.html#healthEndpoint[Health Endpoint] for more information.
+
+When using the `jdbc-hikari` dependency, a api:configuration.jdbc.hikari.health.HikariHealthIndicator[] is also activated alongside api:management.health.indicator.jdbc.JdbcIndicator[]. It reports pool statistics including `totalConnections`, `activeConnections`, `idleConnections`, and `threadsAwaitingConnection`, and reports `DOWN` if a connection cannot be acquired within `datasources.<name>.health-check-timeout` (default: `2s`):
+
+[configuration]
+----
+datasources:
+  default:
+    health-check-timeout: 500ms
+----
+
+To disable api:configuration.jdbc.hikari.health.HikariHealthIndicator[], set `endpoints.health.jdbc.hikari.enabled` to `false`.

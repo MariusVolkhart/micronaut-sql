@@ -7,7 +7,12 @@ dependencies {
     api(mn.micronaut.inject)
     api(libs.managed.hikaricp)
 
+    // HikariHealthIndicator: Mono/Flux appear in its public API (Publisher<HealthResult>)
+    implementation(mn.reactor)
+
     compileOnly(mnMicrometer.micronaut.micrometer.core)
+    // HealthIndicator, HealthEndpoint, HealthResult, HealthAggregator, TaskExecutors — optional feature
+    compileOnly(mn.micronaut.management)
 
     testRuntimeOnly(libs.managed.h2)
 

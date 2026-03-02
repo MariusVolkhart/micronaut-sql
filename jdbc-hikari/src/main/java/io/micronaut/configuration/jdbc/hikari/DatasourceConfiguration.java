@@ -24,6 +24,7 @@ import io.micronaut.jdbc.BasicJdbcConfiguration;
 import io.micronaut.jdbc.CalculatedSettings;
 
 import jakarta.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -44,6 +45,7 @@ public class DatasourceConfiguration extends HikariConfig implements BasicJdbcCo
     private CalculatedSettings calculatedSettings;
     private String name;
     private boolean automaticValidationQuery = true;
+    private Duration healthCheckTimeout = Duration.ofSeconds(2);
 
     /**
      * Constructor.
@@ -192,5 +194,28 @@ public class DatasourceConfiguration extends HikariConfig implements BasicJdbcCo
      */
     public void setAutomaticValidationQuery(boolean automaticValidationQuery) {
         this.automaticValidationQuery = automaticValidationQuery;
+    }
+
+    /**
+     * The maximum time to wait when acquiring a connection for the health check.
+     * If a connection cannot be obtained within this duration, the health indicator
+     * reports {@link io.micronaut.health.HealthStatus#DOWN}.
+     *
+     * <p>Defaults to 2 seconds — intentionally shorter than
+     * {@link com.zaxxer.hikari.HikariConfig#getConnectionTimeout()} so that the health probe
+     * detects pool saturation quickly, allowing a load balancer to remove the instance
+     * before new traffic arrives.
+     *
+     * @return the health-check timeout.
+     */
+    public Duration getHealthCheckTimeout() {
+        return healthCheckTimeout;
+    }
+
+    /**
+     * @param healthCheckTimeout the health-check timeout.
+     */
+    public void setHealthCheckTimeout(Duration healthCheckTimeout) {
+        this.healthCheckTimeout = healthCheckTimeout;
     }
 }

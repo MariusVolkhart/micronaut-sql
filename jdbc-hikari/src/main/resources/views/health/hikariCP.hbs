@@ -1,0 +1,18 @@
+{{#with subDetails.details}}
+    {{#each details as |pool|}}
+        {{#if @first}}{{else}}<hr/>{{/if}}
+        <p class="card-text"><strong><code>{{@key}}</code></strong></p>
+        {{#with pool.details as |stats|}}
+            <dl class="row mb-0">
+                <dt class="col-sm-8">Total connections</dt>
+                <dd class="col-sm-4">{{stats.totalConnections}}</dd>
+                <dt class="col-sm-8">Active connections</dt>
+                <dd class="col-sm-4">{{stats.activeConnections}}</dd>
+                <dt class="col-sm-8">Idle connections</dt>
+                <dd class="col-sm-4">{{stats.idleConnections}}</dd>
+                <dt class="col-sm-8">Threads awaiting</dt>
+                <dd class="col-sm-4">{{stats.threadsAwaitingConnection}}</dd>
+            </dl>
+        {{/with}}
+    {{/each}}
+{{/with}}
